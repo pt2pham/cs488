@@ -199,22 +199,36 @@ void A0::guiLogic()
 
 	ImGui::Begin("Shape Properties", &showDebugWindow, ImVec2(100,100), opacity,
 			windowFlags);
-		// Retrieve red color component from slider and store in the first element of
-		// m_shape_color.
-		ImGui::SliderFloat("Red Channel", &m_shape_color.r, 0.0f, 1.0f);
-
-
-		// Add more gui elements here here ...
-
 
 		// Create Button, and check if it was clicked:
 		if( ImGui::Button( "Quit Application" ) ) {
 			glfwSetWindowShouldClose(m_window, GL_TRUE);
 		}
 
+		if ( ImGui::Button( "Reset" ) ) { 
+			reset();
+		}
+
+		// Retrieve red color component from slider and store in the first element of
+		// m_shape_color.
+		ImGui::SliderFloat("Red Channel", &m_shape_color.r, 0.0f, 1.0f);
+
+		// Add more gui elements here here ...
+		ImGui::SliderFloat("Green Channel", &m_shape_color.g, 0.0f, 1.0f);
+		ImGui::SliderFloat("Blue Channel", &m_shape_color.b, 0.0f, 1.0f);
+		ImGui::SliderFloat("Rotation Slider", &m_shape_rotation, 0.0f, 2*PI); 
+
 		ImGui::Text( "Framerate: %.1f FPS", ImGui::GetIO().Framerate );
 
 	ImGui::End();
+}
+
+void A0::reset() 
+{
+	m_shape_color = glm::vec3(1.0f, 1.0f, 1.0f);
+	m_shape_translation = vec2(0.0f);
+	m_shape_size = 1.0f;
+	m_shape_rotation = 0.0f;
 }
 
 //----------------------------------------------------------------------------------------
@@ -338,16 +352,22 @@ bool A0::keyInputEvent(int key, int action, int mods) {
 	if (action == GLFW_PRESS) {
 		if (key == GLFW_KEY_EQUAL) {
 			cout << "+ key pressed" << endl;
-
-			// TODO - increase shape size.
-
+			m_shape_size = m_shape_size + 0.5f;
 			eventHandled = true;
 		}
 		if (key == GLFW_KEY_MINUS) {
 			cout << "- key pressed" << endl;
+			m_shape_size = m_shape_size - 0.5f;
+			eventHandled = true;
+		}
+		if (key == GLFW_KEY_Q) {
+			cout << "Q key pressed" << endl;
 
-			// TODO - decrease shape size.
-
+			glfwSetWindowShouldClose(m_window, GL_TRUE);
+		}
+		if (key == GLFW_KEY_R) {
+			cout << "R key pressed" << endl;
+			reset();
 			eventHandled = true;
 		}
 	}

@@ -4,6 +4,7 @@
 #include "cs488-framework/GlErrorCheck.hpp"
 
 #include <iostream>
+#include <vector>
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -45,13 +46,6 @@ void A1::init()
 	// Print random number seed in case we want to rerun with
 	// same random numbers
 	cout << "Random number seed = " << rseed << endl;
-	
-
-	// DELETE FROM HERE...
-	Maze m(DIM);
-	m.digMaze();
-	m.printMaze();
-	// ...TO HERE
 	
 	// Set the background colour.
 	glClearColor( 0.3, 0.5, 0.7, 1.0 );
@@ -133,7 +127,41 @@ void A1::initGrid()
 	// OpenGL has the buffer now, there's no need for us to keep a copy.
 	delete [] verts;
 
+	initCubeGrid();
+
 	CHECK_GL_ERRORS;
+}
+
+void A1::initCubeGrid(){
+	Maze m(DIM);
+	m.digMaze();
+	m.printMaze();
+	
+	int height = 1;
+	for (int x = 0; x < DIM; x++) {
+		vector<shared_ptr<Cube>> cube_col; 
+		for (int z = 0; z < DIM; z++) {
+			// int height = (m.getValue(x, z) == 1) ? 1 : 0;
+			// cube_col.push_back(make_shared<Cube>(x, height, z));
+			if (m.getValue(x, z) == 1) cube_col.push_back(make_shared<Cube>(x, 1, z));
+		}
+		cube_grid.push_back(cube_col);
+	}
+}
+
+void A1::reset() 
+{
+	// TODO: Reset state
+	// There should be a Reset button that restores the grid to its initial, 
+	// empty state, resets the view to the default, resets the colour 
+	// to the initial colours, and moves the avatar back to the cell (0,0).
+}
+
+void A1::dig() 
+{
+	// TODO: There should be a Dig button that will create the maze 
+	// (or create a new maze if one already exists), 
+	// and place the avatar at the start cell of the maze
 }
 
 //----------------------------------------------------------------------------------------
@@ -165,6 +193,14 @@ void A1::guiLogic()
 	ImGui::Begin("Debug Window", &showDebugWindow, ImVec2(100,100), opacity, windowFlags);
 		if( ImGui::Button( "Quit Application" ) ) {
 			glfwSetWindowShouldClose(m_window, GL_TRUE);
+		}
+
+		if ( ImGui::Button( "Reset" ) ) { 
+			reset();
+		}
+
+		if ( ImGui::Button( "Dig" ) ) {
+			dig();
 		}
 
 		// Eventually you'll create multiple colour widgets with
@@ -226,6 +262,12 @@ void A1::draw()
 		glDrawArrays( GL_LINES, 0, (3+DIM)*4 );
 
 		// Draw the cubes
+		for (auto col : cube_grid) {
+			for (auto cube : col) {
+				cube->draw();
+			}
+		}
+		// make_shared<Cube>(10, 3, 10)->draw();
 		// Highlight the active square.
 	m_shader.disable();
 
@@ -324,6 +366,16 @@ bool A1::keyInputEvent(int key, int action, int mods) {
 	// Fill in with event handling code...
 	if( action == GLFW_PRESS ) {
 		// Respond to some key events.
+		if (key == GLFW_KEY_Q) {
+			cout << "Q key pressed" << endl;
+
+			glfwSetWindowShouldClose(m_window, GL_TRUE);
+		}
+		if (key == GLFW_KEY_R) {
+			cout << "R key pressed" << endl;
+			reset();
+			eventHandled = true;
+		}
 	}
 
 	return eventHandled;

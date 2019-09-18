@@ -88,7 +88,6 @@ void Maze::printMaze() {
 	}
 }
 
-
 void Maze::recDigMaze(int r, int c) {
 	int* p;
 	p = perm[random()%24];

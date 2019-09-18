@@ -9,6 +9,8 @@
 #include "cs488-framework/ShaderProgram.hpp"
 
 #include "maze.hpp"
+#include "Cube.hpp"
+#include <vector>
 
 class A1 : public CS488Window {
 public:
@@ -31,7 +33,11 @@ protected:
 
 private:
 	void initGrid();
-
+	void reset();
+	void dig();
+	void drawCube(int x, int height, int z);
+	void initCubeGrid();
+	
 	// Fields related to the shader and uniforms.
 	ShaderProgram m_shader;
 	GLint P_uni; // Uniform location for Projection matrix.
@@ -46,6 +52,8 @@ private:
 	// Matrices controlling the camera and projection.
 	glm::mat4 proj;
 	glm::mat4 view;
+
+	std::vector<std::vector<std::shared_ptr<Cube>>> cube_grid;
 
 	float colour[3];
 	int current_col;

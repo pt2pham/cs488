@@ -1,0 +1,67 @@
+// Fall 2019
+
+#include <algorithm>
+#include <cstdio>
+
+#include "cube.hpp"
+
+static const float CUBE_SIZE = 1.0f;
+Cube::Cube( int x, int height, int z ) {
+    genBuffers();
+
+    verts = {
+		// Top 
+		glm::vec3(1.0f + CUBE_SIZE*x, CUBE_SIZE*height, 1.0f + CUBE_SIZE*z), // back right
+		glm::vec3(CUBE_SIZE*x, CUBE_SIZE*height, 1.0f + CUBE_SIZE*z), // back left
+		glm::vec3(1.0f + CUBE_SIZE*x, CUBE_SIZE*height, CUBE_SIZE*z), // front right
+		glm::vec3(CUBE_SIZE*x, CUBE_SIZE*height, CUBE_SIZE*z), // front left
+		// Bottom
+		glm::vec3(CUBE_SIZE*x, 0, 1.0f + CUBE_SIZE*z), // back right
+		glm::vec3(1.0f + CUBE_SIZE*x, 0, 1.0f + CUBE_SIZE*z), // back left
+		glm::vec3(CUBE_SIZE*x, 0, CUBE_SIZE*z), // front right
+		glm::vec3(1.0f + CUBE_SIZE*x, 0, CUBE_SIZE*z), // front left
+	};
+
+	indices = {
+		0, 1, 2, 2, 1, 3, // top
+		3, 7, 2, 2, 6, 7, // front
+		1, 5, 3, 3, 5, 7, // left side
+		0, 4, 2, 2, 4, 6, // right side
+		5, 4, 1, 1, 4, 0, // back
+		5, 4, 7, 7, 4, 6 // bottom
+	};
+    sendBufferData();
+}
+
+Cube::~Cube() {
+}
+
+void Cube::genBuffers() {
+    glGenVertexArrays( 1, &cubeVao );
+	glGenBuffers( 1, &cubeVbo );
+    glGenBuffers( 1, &indicesEbo );
+}
+
+void Cube::sendBufferData() {
+    // Cube VAO
+    glBindVertexArray( cubeVao );
+
+    // Cube VBO
+    glBindBuffer( GL_ARRAY_BUFFER, cubeVbo );
+	glBufferData( GL_ARRAY_BUFFER, sizeof(glm::vec3)*verts.size(), verts.data(), GL_STATIC_DRAW );
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);	
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (char*)(sizeof(float) * 3));	
+
+    // Indices EBO
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indicesEbo );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_STATIC_DRAW );
+}
+
+void Cube::draw() {
+    sendBufferData();
+    glDrawElements( GL_TRIANGLES, (GLsizei)36*3, GL_UNSIGNED_INT, 0 );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
+	glBindBuffer( GL_ARRAY_BUFFER, 0 );
+}

@@ -240,7 +240,7 @@ void A0::draw()
 	glBindVertexArray(m_vao_triangle);
 
 	m_shader.enable();
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 	m_shader.disable();
 
 

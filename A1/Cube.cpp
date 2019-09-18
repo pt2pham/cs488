@@ -30,7 +30,7 @@ Cube::Cube( int x, int height, int z ) {
 		5, 4, 1, 1, 4, 0, // back
 		5, 4, 7, 7, 4, 6 // bottom
 	};
-    sendBufferData();
+    uploadBufferData();
 }
 
 Cube::~Cube() {
@@ -42,7 +42,7 @@ void Cube::genBuffers() {
     glGenBuffers( 1, &indicesEbo );
 }
 
-void Cube::sendBufferData() {
+void Cube::uploadBufferData() {
     // Cube VAO
     glBindVertexArray( cubeVao );
 
@@ -60,8 +60,13 @@ void Cube::sendBufferData() {
 }
 
 void Cube::draw() {
-    sendBufferData();
-    glDrawElements( GL_TRIANGLES, (GLsizei)36*3, GL_UNSIGNED_INT, 0 );
-	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
-	glBindBuffer( GL_ARRAY_BUFFER, 0 );
+    // Rebind
+    glBindVertexArray( cubeVao );
+    glBindBuffer(GL_ARRAY_BUFFER, cubeVbo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesEbo);
+    // Draw
+    glDrawElements(GL_TRIANGLES, (GLsizei)36*3, GL_UNSIGNED_INT, 0);
+    // Reset binded buffers
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

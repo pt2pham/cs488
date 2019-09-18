@@ -15,7 +15,7 @@ public:
 	~Cube();
 
 	void reset();
-    void sendBufferData();
+    void uploadBufferData();
     void draw();
     void genBuffers();
 

@@ -1,0 +1,11 @@
+Compiling the program is done through the usual steps of: 
+
+$ premake gmake4
+$ make
+$ ./A1
+
+Manual:
+
+I completed every objective except for making the avatar a Sphere. 
+I left it as a Cube and just changed the default colour to identify it and 
+be able to do the rest of the objectives.

@@ -11,6 +11,7 @@
 #include "maze.hpp"
 #include "Cube.hpp"
 #include <vector>
+#include <ctime>
 
 class A1 : public CS488Window {
 public:
@@ -65,4 +66,7 @@ private:
 	float model_rotation;
 	float model_scale;
 	double old_x_pos;
+	float last_rotation_dir;
+	std::clock_t last_release_time;
+	
 };

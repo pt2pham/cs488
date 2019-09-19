@@ -272,6 +272,11 @@ void A1::dig() {
 void A1::appLogic()
 {
 	// Place per frame, application logic here ...
+	if ((clock() - last_release_time) / (double) CLOCKS_PER_SEC <= 1.5 
+		&& (clock() - last_release_time) / (double) CLOCKS_PER_SEC >= 0) {
+		model_rotation += last_rotation_dir * 0.01f;
+		last_rotation_dir *= 0.97;
+	}
 }
 
 //----------------------------------------------------------------------------------------
@@ -335,9 +340,9 @@ void A1::draw()
 {
 	// Create a global transformation for the model (centre it).
 	mat4 W;
-	W = glm::translate( W, vec3( -float(DIM)/2.0f, 0, -float(DIM)/2.0f ) );
 	W = glm::rotate(W, model_rotation, glm::vec3(0, 1, 0));
 	W = glm::scale(W, vec3(model_scale));
+	W = glm::translate( W, vec3( -float(DIM)/2.0f, 0, -float(DIM)/2.0f ) );
 
 	m_shader.enable();
 		glEnable( GL_DEPTH_TEST );
@@ -406,8 +411,10 @@ bool A1::mouseMoveEvent(double xPos, double yPos)
 		// that you can rotate relative to the *change* in X.
 		if (ImGui::IsMouseDown(0)) {
 			float difference = xPos - old_x_pos;
-			model_rotation += difference * 0.005f;
-		}
+			model_rotation += difference * 0.001f;
+			last_rotation_dir = difference;
+			last_release_time = std::clock();
+		} 
 		old_x_pos = xPos;
 	}
 

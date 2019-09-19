@@ -35,8 +35,11 @@ private:
 	void initGrid();
 	void reset();
 	void dig();
-	void drawCube(int x, int height, int z);
 	void initCubeGrid();
+	void growWalls();
+	void shrinkWalls();
+	void initAvatar();
+	void moveAvatar(short int x, short int z, bool shiftEnabled);
 	
 	// Fields related to the shader and uniforms.
 	ShaderProgram m_shader;
@@ -54,7 +57,12 @@ private:
 	glm::mat4 view;
 
 	std::vector<std::vector<std::shared_ptr<Cube>>> cube_grid;
+	std::shared_ptr<Cube> avatar;
+	std::shared_ptr<Maze> m;
 
-	float colour[3];
+	float colour[3][3];
 	int current_col;
+	float model_rotation;
+	float model_scale;
+	double old_x_pos;
 };

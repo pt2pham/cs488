@@ -24,9 +24,20 @@ static const size_t DIM = 16;
 A1::A1()
 	: current_col( 0 )
 {
-	colour[0] = 0.0f;
-	colour[1] = 0.0f;
-	colour[2] = 0.0f;
+	// Grid
+	colour[0][0] = 0.0f;
+	colour[0][1] = 0.0f;
+	colour[0][2] = 0.0f;
+	// Cubes
+	colour[1][0] = 0.5f;
+	colour[1][1] = 0.0f;
+	colour[1][2] = 0.0f;
+	// Avatar
+	colour[2][0] = 0.0f;
+	colour[2][1] = 0.0f;
+	colour[2][2] = 0.5f;
+	model_rotation = 0.0f;
+	model_scale = 1.0f;
 }
 
 //----------------------------------------------------------------------------------------
@@ -40,6 +51,8 @@ A1::~A1()
  */
 void A1::init()
 {
+	m = make_shared<Maze>(DIM);
+	
 	// Initialize random number generator
 	int rseed=getpid();
 	srandom(rseed);
@@ -65,6 +78,7 @@ void A1::init()
 	col_uni = m_shader.getUniformLocation( "colour" );
 
 	initGrid();
+	avatar = make_shared<Cube>(0,1,0);
 
 	// Set up initial view and projection matrices (need to do this here,
 	// since it depends on the GLFW window being set up correctly).
@@ -127,26 +141,93 @@ void A1::initGrid()
 	// OpenGL has the buffer now, there's no need for us to keep a copy.
 	delete [] verts;
 
-	initCubeGrid();
-
 	CHECK_GL_ERRORS;
 }
 
+/*
+ * 
+ * CUBE OPERATIONS FOR A1
+ * 
+ * initCubeGrid
+ * growWalls
+ * shrinkWalls
+ * initAvatar
+ */
 void A1::initCubeGrid(){
-	Maze m(DIM);
-	m.digMaze();
-	m.printMaze();
-	
 	int height = 1;
 	for (int x = 0; x < DIM; x++) {
 		vector<shared_ptr<Cube>> cube_col; 
 		for (int z = 0; z < DIM; z++) {
-			// int height = (m.getValue(x, z) == 1) ? 1 : 0;
-			// cube_col.push_back(make_shared<Cube>(x, height, z));
-			if (m.getValue(x, z) == 1) cube_col.push_back(make_shared<Cube>(x, 1, z));
-		}
+			if (m->getValue(x, z) == 1) cube_col.push_back(make_shared<Cube>(x, height, z));
+		}	
 		cube_grid.push_back(cube_col);
 	}
+}
+
+void A1::initAvatar(){
+	// Find a viable starting position
+	// Top border - [0][0...DIM]
+	for (int z = 0; z < DIM; z++) {
+		if (m->getValue(0, z) == 0) {
+			avatar = make_shared<Cube>(0, 1, z);
+			return;
+		}
+	}
+	// Left border
+	for (int x = 0; x < DIM; x++) {
+		if (m->getValue(x, 0) == 0) {
+			avatar = make_shared<Cube>(x, 1, 0);
+			return;
+		}
+	}
+
+	// Bottom border
+	for (int z = 0; z < DIM; z++) {
+		if (m->getValue(DIM, z) == 0) {
+			avatar = make_shared<Cube>(DIM, 1, z);
+			return;
+		}
+	}
+
+	// Right border
+	for (int x = 0; x < DIM; x++) {
+		if (m->getValue(x, DIM) == 0) {
+			avatar = make_shared<Cube>(x, 1, DIM);
+			return;
+		}
+	}
+}
+
+void A1::growWalls() {
+	for (auto col : cube_grid) 
+		for (auto cube : col) 
+			cube->growHeight(1.0f);
+}
+
+void A1::shrinkWalls() {
+	for (auto col : cube_grid)
+		for (auto cube : col)
+			cube->shrinkHeight(1.0f);
+}
+
+void A1::moveAvatar(short int x, short int z, bool shiftEnabled) {
+	unsigned short int nextXPos = avatar->xPos + x;
+	unsigned short int nextZPos = avatar->zPos + z;
+
+	if (shiftEnabled && m->getValue(nextXPos, nextZPos) == 1) {
+		m->setValue(nextXPos, nextZPos, 0);
+		// Disable cube itself to prevent drawing it
+		for (auto col : cube_grid) { 
+			for (auto cube : col) {
+				if (cube->xPos == nextXPos && cube->zPos == nextZPos) {
+					cube->disabled = true;
+					avatar->translate(x, z);
+					return;
+				}
+			}
+		}
+	} else if (m->getValue(nextXPos, nextZPos) == 0)
+		avatar->translate(x, z);
 }
 
 void A1::reset() 
@@ -155,15 +236,35 @@ void A1::reset()
 	// There should be a Reset button that restores the grid to its initial, 
 	// empty state, resets the view to the default, resets the colour 
 	// to the initial colours, and moves the avatar back to the cell (0,0).
+	
+	// Grid
+	colour[0][0] = 1.0f;
+	colour[0][1] = 1.0f;
+	colour[0][2] = 1.0f;
+	// Cubes
+	colour[1][0] = 1.0f;
+	colour[1][1] = 1.0f;
+	colour[1][2] = 1.0f;
+	// Avatar
+	colour[2][0] = 1.0f;
+	colour[2][1] = 1.0f;
+	colour[2][2] = 1.0f;
+
+	model_rotation = 0.0f;
+	model_scale = 1.0f;
+
+	old_x_pos = 0.0;
+	m->reset();
+	cube_grid.clear();
+	avatar = make_shared<Cube>(0,1,0);
 }
 
-void A1::dig() 
-{
-	// TODO: There should be a Dig button that will create the maze 
-	// (or create a new maze if one already exists), 
-	// and place the avatar at the start cell of the maze
+void A1::dig() {
+	m->digMaze();
+	initAvatar();
+	cube_grid.clear();
+	initCubeGrid();
 }
-
 //----------------------------------------------------------------------------------------
 /*
  * Called once per frame, before guiLogic().
@@ -202,24 +303,11 @@ void A1::guiLogic()
 		if ( ImGui::Button( "Dig" ) ) {
 			dig();
 		}
-
-		// Eventually you'll create multiple colour widgets with
-		// radio buttons.  If you use PushID/PopID to give them all
-		// unique IDs, then ImGui will be able to keep them separate.
-		// This is unnecessary with a single colour selector and
-		// radio button, but I'm leaving it in as an example.
-
-		// Prefixing a widget name with "##" keeps it from being
-		// displayed.
-
-		ImGui::PushID( 0 );
-		ImGui::ColorEdit3( "##Colour", colour );
-		ImGui::SameLine();
-		if( ImGui::RadioButton( "##Col", &current_col, 0 ) ) {
-			// Select this colour.
-		}
-		ImGui::PopID();
-
+		
+		ImGui::ColorEdit3( "##Colour", colour[current_col] );
+		ImGui::RadioButton( "Grid", &current_col, 0 );
+		ImGui::RadioButton( "Maze", &current_col, 1 );
+		ImGui::RadioButton( "Avatar", &current_col, 2 );
 /*
 		// For convenience, you can uncomment this to show ImGui's massive
 		// demonstration window right in your application.  Very handy for
@@ -248,6 +336,8 @@ void A1::draw()
 	// Create a global transformation for the model (centre it).
 	mat4 W;
 	W = glm::translate( W, vec3( -float(DIM)/2.0f, 0, -float(DIM)/2.0f ) );
+	W = glm::rotate(W, model_rotation, glm::vec3(0, 1, 0));
+	W = glm::scale(W, vec3(model_scale));
 
 	m_shader.enable();
 		glEnable( GL_DEPTH_TEST );
@@ -258,22 +348,24 @@ void A1::draw()
 
 		// Just draw the grid for now.
 		glBindVertexArray( m_grid_vao );
-		glUniform3f( col_uni, 1, 1, 1 );
+		glUniform3f( col_uni, colour[0][0], colour[0][1], colour[0][2]);
 		glDrawArrays( GL_LINES, 0, (3+DIM)*4 );
 
 		// Draw the cubes
 		for (auto col : cube_grid) {
 			for (auto cube : col) {
-				cube->draw();
+				glUniform3f( col_uni, colour[1][0], colour[1][1], colour[1][2] );
+				if (!cube->disabled)
+					cube->draw();
 			}
 		}
-		// make_shared<Cube>(10, 3, 10)->draw();
 		// Highlight the active square.
+		glUniform3f( col_uni, colour[2][0], colour[2][1], colour[2][2]);
+		avatar->draw();
 	m_shader.disable();
 
 	// Restore defaults
 	glBindVertexArray( 0 );
-
 	CHECK_GL_ERRORS;
 }
 
@@ -312,6 +404,11 @@ bool A1::mouseMoveEvent(double xPos, double yPos)
 		// Probably need some instance variables to track the current
 		// rotation amount, and maybe the previous X position (so 
 		// that you can rotate relative to the *change* in X.
+		if (ImGui::IsMouseDown(0)) {
+			float difference = xPos - old_x_pos;
+			model_rotation += difference * 0.005f;
+		}
+		old_x_pos = xPos;
 	}
 
 	return eventHandled;
@@ -340,6 +437,12 @@ bool A1::mouseScrollEvent(double xOffSet, double yOffSet) {
 	bool eventHandled(false);
 
 	// Zoom in or out.
+	if (yOffSet > 0) {
+		model_scale *= 1 + (0.1 * yOffSet);
+	} else {
+		model_scale /= 1 - (0.1 * yOffSet);
+	}
+	model_scale = glm::clamp(model_scale, 0.0f, 10.0f);
 
 	return eventHandled;
 }
@@ -366,15 +469,49 @@ bool A1::keyInputEvent(int key, int action, int mods) {
 	// Fill in with event handling code...
 	if( action == GLFW_PRESS ) {
 		// Respond to some key events.
-		if (key == GLFW_KEY_Q) {
-			cout << "Q key pressed" << endl;
-
-			glfwSetWindowShouldClose(m_window, GL_TRUE);
-		}
-		if (key == GLFW_KEY_R) {
-			cout << "R key pressed" << endl;
-			reset();
-			eventHandled = true;
+		switch (key) {
+			// Quit
+			case GLFW_KEY_Q:
+				glfwSetWindowShouldClose(m_window, GL_TRUE);
+				break;
+			// Reset
+			case GLFW_KEY_R:
+				reset();
+				eventHandled = true;
+				break;
+			// Dig
+			case GLFW_KEY_D:
+				dig();
+				eventHandled = true;
+				break;
+			// Wall Height Change
+			case GLFW_KEY_SPACE:
+				growWalls();
+				eventHandled = true;
+				break;
+			case GLFW_KEY_BACKSPACE:
+				shrinkWalls();
+				eventHandled = true;
+				break;
+			// Movements
+			case GLFW_KEY_UP:
+				moveAvatar(0, -1, mods == GLFW_MOD_SHIFT);
+				eventHandled = true;
+				break;
+			case GLFW_KEY_DOWN:
+				moveAvatar(0, 1, mods == GLFW_MOD_SHIFT);
+				eventHandled = true;
+				break;
+			case GLFW_KEY_LEFT:
+				moveAvatar(-1, 0, mods == GLFW_MOD_SHIFT);
+				eventHandled = true;
+				break;
+			case GLFW_KEY_RIGHT:
+				moveAvatar(1, 0, mods == GLFW_MOD_SHIFT);
+				eventHandled = true;
+				break;
+			default:
+				break;
 		}
 	}
 

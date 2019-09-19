@@ -2,13 +2,15 @@
 
 #include <algorithm>
 #include <cstdio>
+#include <iostream>
 
 #include "cube.hpp"
 
 static const float CUBE_SIZE = 1.0f;
 Cube::Cube( int x, int height, int z ) {
     genBuffers();
-
+    xPos = x;
+    zPos = z;
     verts = {
 		// Top 
 		glm::vec3(1.0f + CUBE_SIZE*x, CUBE_SIZE*height, 1.0f + CUBE_SIZE*z), // back right
@@ -16,10 +18,10 @@ Cube::Cube( int x, int height, int z ) {
 		glm::vec3(1.0f + CUBE_SIZE*x, CUBE_SIZE*height, CUBE_SIZE*z), // front right
 		glm::vec3(CUBE_SIZE*x, CUBE_SIZE*height, CUBE_SIZE*z), // front left
 		// Bottom
-		glm::vec3(CUBE_SIZE*x, 0, 1.0f + CUBE_SIZE*z), // back right
-		glm::vec3(1.0f + CUBE_SIZE*x, 0, 1.0f + CUBE_SIZE*z), // back left
-		glm::vec3(CUBE_SIZE*x, 0, CUBE_SIZE*z), // front right
-		glm::vec3(1.0f + CUBE_SIZE*x, 0, CUBE_SIZE*z), // front left
+		glm::vec3(1.0f + CUBE_SIZE*x, 0, 1.0f + CUBE_SIZE*z), // back right
+		glm::vec3(CUBE_SIZE*x, 0, 1.0f + CUBE_SIZE*z), // back left
+		glm::vec3(1.0f + CUBE_SIZE*x, 0, CUBE_SIZE*z), // front right
+		glm::vec3(CUBE_SIZE*x, 0, CUBE_SIZE*z), // front left
 	};
 
 	indices = {
@@ -69,4 +71,30 @@ void Cube::draw() {
     // Reset binded buffers
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+// The first 4 vertices are for the top square
+void Cube::growHeight(unsigned short int delta) {
+    for (int i=0;i<4;i++){
+        verts[i].y += delta;
+    }
+    uploadBufferData();
+}
+
+void Cube::shrinkHeight(unsigned short int delta) {
+    for (int i=0;i<4;i++){
+        verts[i].y = std::max(0.0f, verts[i].y - delta);
+    }
+    uploadBufferData();
+}
+
+void Cube::translate(float x, float z) {
+    xPos += x; // Tracked to compare position to walls in maze
+    zPos += z;
+
+    for (int i = 0; i < 8; i++) {
+        verts[i].x += x;
+        verts[i].z += z;
+    }
+    uploadBufferData();
 }

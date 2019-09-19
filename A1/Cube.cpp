@@ -7,10 +7,9 @@
 #include "cube.hpp"
 
 static const float CUBE_SIZE = 1.0f;
-Cube::Cube( int x, int height, int z ) {
+Cube::Cube( int x, int height, int z ) : disabled(false), xPos(x), zPos(z) {
     genBuffers();
-    xPos = x;
-    zPos = z;
+
     verts = {
 		// Top 
 		glm::vec3(1.0f + CUBE_SIZE*x, CUBE_SIZE*height, 1.0f + CUBE_SIZE*z), // back right

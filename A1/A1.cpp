@@ -238,17 +238,17 @@ void A1::reset()
 	// to the initial colours, and moves the avatar back to the cell (0,0).
 	
 	// Grid
-	colour[0][0] = 1.0f;
-	colour[0][1] = 1.0f;
-	colour[0][2] = 1.0f;
+	colour[0][0] = 0.0f;
+	colour[0][1] = 0.0f;
+	colour[0][2] = 0.0f;
 	// Cubes
-	colour[1][0] = 1.0f;
-	colour[1][1] = 1.0f;
-	colour[1][2] = 1.0f;
+	colour[1][0] = 0.5f;
+	colour[1][1] = 0.0f;
+	colour[1][2] = 0.0f;
 	// Avatar
-	colour[2][0] = 1.0f;
-	colour[2][1] = 1.0f;
-	colour[2][2] = 1.0f;
+	colour[2][0] = 0.0f;
+	colour[2][1] = 0.0f;
+	colour[2][2] = 0.5f;
 
 	model_rotation = 0.0f;
 	model_scale = 1.0f;
@@ -260,6 +260,7 @@ void A1::reset()
 }
 
 void A1::dig() {
+	m->reset();
 	m->digMaze();
 	initAvatar();
 	cube_grid.clear();

@@ -61,6 +61,23 @@ protected:
 			const glm::vec2 & v0,
 			const glm::vec2 & v1
 	);
+	void reset();
+	void initV();
+	void initP();
+	void drawGnomons();
+	void rotateModel(double xDifference);
+	void translateModel(double xDifference);
+	void scaleModel(double xDifference);
+	void rotateView(double xDifference);
+	void translateView(double xDifference);
+	void changePerspective(double xDifference);
+	void resizeViewport(double xPos, double yPos);
+
+	void drawViewport();
+	void drawCube();
+
+	bool clip(glm::vec4 & v1, glm::vec4 & v2);
+	glm::vec2 scaleToViewport(const glm::vec2 & v);
 
 	ShaderProgram m_shader;
 
@@ -70,6 +87,45 @@ protected:
 
 	VertexData m_vertexData;
 
+	int transformation_mode;
+	double old_x_pos;
+	
+	// Perspective Projection
+	float fieldOfView = 30.0f;
+	float near = 1.0f; // Based on course notes
+	float far = 1000.0f; 
+
+	// const float initM[16] {
+	// 	0.1f, 0, 0, 0,
+	// 	0, 0.1f, 0, 0,
+	// 	0, 0, 0.1f, 0,
+	// 	0, 0, 0, 1,
+	// };
+	const float initM[16] {
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		1, 1, 1, 1,
+	};
+
+	float viewportHeight;
+	float viewportWidth;
+	float viewport_x_vl; // X-coord of the viewport window (bottom left)
+	float viewport_y_vb; // Y-coord of the viewport window (bottom left)
+	float selected_viewport_x;
+	float selected_viewport_y;
+	bool storeViewportCorner = false;
+
 	glm::vec3 m_currentLineColour;
+
+	glm::mat4 P; // View-to-Projection matrix
+	glm::mat4 V; // World-to-View matrix
+	glm::mat4 M; // Model-to-World matrix
+	glm::mat4 M_gnomon; // Model-to-World matrix for gnomon
+
+	// TODO: These don't need to be vectors I think ... I never change them
+	std::vector<std::pair<glm::vec4, glm::vec4>> world_gnomon; 
+	std::vector<std::pair<glm::vec4, glm::vec4>> model_gnomon;
+	std::vector<std::pair<glm::vec4, glm::vec4>> cube;
 
 };

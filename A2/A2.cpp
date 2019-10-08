@@ -758,8 +758,8 @@ void A2::scaleModel(double xDifference) {
 void A2::rotateView(double xDifference) {
 	// rotateModel but inverse matrices
 	double theta = glm::radians(xDifference);
-
-	if (ImGui::IsMouseDown(0)) {
+	// Strangely, these 2 transformations are affecting the wrong axis.
+	if (ImGui::IsMouseDown(2)) { 
 		const mat4 rotation_X(
 			1, 0, 0, 0,
 			0, std::cos(theta), std::sin(theta), 0,
@@ -768,8 +768,8 @@ void A2::rotateView(double xDifference) {
 		);
 		V = inverse(rotation_X) * V;
 	}
-
-	if (ImGui::IsMouseDown(2)) {
+	// Strangely, these 2 transformations are affecting the wrong axis.
+	if (ImGui::IsMouseDown(0)) { 
 		const mat4 rotation_Y(
 			std::cos(theta), 0, -std::sin(theta), 0,
 			0, 1, 0, 0,

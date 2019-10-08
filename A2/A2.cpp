@@ -102,8 +102,8 @@ void A2::initV() {
 	V = mat4(
 		1, 0, 0, 0,
 		0, 1, 0, 0,
-		0, 0, -1, 0,
-		0, 0, 10, 1
+		0, 0, 1, 0,
+		0, 0, 8, 1
 	);
 }
 
@@ -302,23 +302,6 @@ void A2::drawViewport() {
 }
 
 void A2::drawCube() {
-	cube = {
-		{glm::vec4(-1.0f, -1.0f, -1.0f, 1), glm::vec4( 1.0f, -1.0f, -1.0f, 1)},
-		{glm::vec4(-1.0f, -1.0f, -1.0f, 1), glm::vec4(-1.0f, -1.0f,  1.0f, 1)},
-		{glm::vec4( 1.0f, -1.0f,  1.0f, 1), glm::vec4( 1.0f, -1.0f, -1.0f, 1)},
-		{glm::vec4( 1.0f, -1.0f,  1.0f, 1), glm::vec4(-1.0f, -1.0f,  1.0f, 1)},
-
-		{glm::vec4(-1.0f,  1.0f, -1.0f, 1), glm::vec4( 1.0f,  1.0f, -1.0f, 1)},
-		{glm::vec4(-1.0f,  1.0f, -1.0f, 1), glm::vec4(-1.0f,  1.0f,  1.0f, 1)},
-		{glm::vec4( 1.0f,  1.0f,  1.0f, 1), glm::vec4( 1.0f,  1.0f, -1.0f, 1)},
-		{glm::vec4( 1.0f,  1.0f,  1.0f, 1), glm::vec4(-1.0f,  1.0f,  1.0f, 1)},
-		
-		{glm::vec4(-1.0f, -1.0f, -1.0f, 1), glm::vec4(-1.0f,  1.0f, -1.0f, 1)},
-		{glm::vec4(-1.0f, -1.0f,  1.0f, 1), glm::vec4(-1.0f,  1.0f,  1.0f, 1)},
-		{glm::vec4( 1.0f, -1.0f, -1.0f, 1), glm::vec4( 1.0f,  1.0f, -1.0f, 1)},
-		{glm::vec4( 1.0f, -1.0f,  1.0f, 1), glm::vec4( 1.0f,  1.0f,  1.0f, 1)}
-	};
-
 	for (auto vertex_pair : cube) { // Draw Cube after going through transformation pipeline
 		setLineColour(vec3(1.0f, 0.5f, 0.25f));
 		vec4 start = P * V * M * vertex_pair.first;

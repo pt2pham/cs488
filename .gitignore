@@ -5,6 +5,8 @@ Instanced_Example*/Makefile
 shared/glfw**/Makefile
 shared/imgui**/Makefile
 
+.vscode/*
+
 build
 
 *.a
@@ -16,7 +18,10 @@ build
 *.xcodeproj/project.xcworkspace/xcuserdata
 *.xcscmblueprint
 *.DS_Store
+*.pdf 
 imgui.ini
+
+FCG2_figures/*
 
 # Ignore Assignment binary names
 A0/A0
@@ -29,5 +34,9 @@ A3/A3
 A3_[Ss]olution/A3
 A4/A4
 A4_[Ss]olution/A4
+
+# Ignore zipped assignments
+*.zip
+
 
 */Assets/backup

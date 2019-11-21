@@ -5,6 +5,7 @@
 #include "SceneNode.hpp"
 #include "Primitive.hpp"
 #include "Material.hpp"
+#include "Ray.hpp"
 
 class GeometryNode : public SceneNode {
 public:
@@ -12,6 +13,8 @@ public:
 		Material *mat = nullptr );
 
 	void setMaterial( Material *material );
+	Hit intersect(const Ray & ray);
+	// virtual Hit intersect(const Ray & ray, std::list<glm::mat4> transforms);
 
 	Material *m_material;
 	Primitive *m_primitive;

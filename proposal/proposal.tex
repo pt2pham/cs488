@@ -1,0 +1,127 @@
+\documentclass {article}
+\usepackage{fullpage}
+
+\begin{document}
+
+~\vfill
+\begin{center}
+\Large
+
+A5 Revised Project Proposal
+
+Title: Shark Hunt - An OpenGL Interactive Experience
+
+Name: Phong Pham
+
+Student ID: 20610310
+
+User ID: pt2pham
+\end{center}
+\vfill ~\vfill~
+\newpage
+\noindent{\Large \bf Final Project:}
+\begin{description}
+\item[Purpose]:\\
+     To implement various graphics objectives that end up creating an OpenGL game that
+     showcases my understanding and work in graphics this term.
+
+\item[Statement]:\\
+     This project will be an OpenGL game. The main idea of the game is 
+     there will be a big body of water encompassed by a \textbf{Skybox}. Underneath 
+     the water will be a \textbf{Model of a Shark} which will be \textbf{Animated to be
+     swimming around} trying to kill you. As the player, you have to shoot it 
+     down with enough exploding cannonballs to beat the game before you die. 
+     
+     In terms of how this project will map to my objectives, the shark
+     approaching the player and the cannonball hit will be 
+     calculated by \textbf{3D Collision Detection}. The models (such as the cannonball) will have 
+     \textbf{Texture Mapping} to colour them more realistically. \textbf{Bump Mapping} 
+     will be used to create ripple effects whenever a cannonball misses 
+     and shoots into the water. To simulate the cannonball explosions
+     upon colliding with the shark, a \textbf{Particle System} will be used. Finally, 
+     the water will be \textbf{reflective and refractive} to look closer to a real body of 
+     water. This should include reflection of the skybox as well as any projectiles flying over the water, 
+     and projectiles / the shark that are underwater. 
+
+     I think this is interesting because it encompasses many of the concepts talked 
+     about this term and applying it to making an interactive game, which turns 
+     the theoretical knowledge accumulated through the course into something that's 
+     playable.
+     
+     I think one of the most difficult things to do will be how light works with the large body 
+     of water where the game will take place. By not using ray tracing, a lot of the 
+     reflection and refraction literature I've read up on does not apply. Figuring out 
+     how to make the water look more realistic will be the hardest part to this, as well as 
+     doing it in an optimized way that doesn't slow down my game beyond playability.
+
+\item[Technical Outline]:\\
+     I will be looking to research papers to learn how to implement many of these 
+     objectives, along with the course notes. Many of these are straight forward based on 
+     course learnings (like Texture and Bump mapping). 
+
+     For 3D Collision, I will be using the axis-aligned bounding boxes concept and look for 
+     when the bounding boxes of two models intersect each other. Namely, this will be around 
+     the shark, the player and the weapons.
+
+     For water to look accurate, it must support reflection and refraction. One real property 
+     of how water interacts with light is that depending on the viewing angle, water will 
+     appear either more reflective or more refractive. To simulate this, I will use Fresnel equations. 
+     As extra objectives I will try to get the Fresnel effect working, as well as depth. In water, underwater 
+     light absorption creates the phenomena that scatters some light back out of the water, and absorbs the rest. 
+     This changes with the depth of water. 
+
+\item[Bibliography]:
+
+Many details of extensions have been looked at in the course notes.
+
+Cai, P. \& Cai, Yiyu \& Chandrasekaran, I. \& Zheng, J.. (2013). Collision detection 
+     using axis aligned bounding boxes. \textit{Simulation, Serious Games and Their Applications}. 1-14.
+
+Iglesias, A. (2004). Computer graphics for water modeling
+     and rendering: a survey. \textit{Future Generation Computer Systems}
+     20, 8, 1355–1374.
+
+Jiménez, P., Thomas, F., \& Torras, C. (2001). 3D collision detection: a survey. \textit{Computers \& Graphics}, 
+     25(2), 269–285. doi: 10.1016/s0097-8493(00)00130-8
+
+Fleck, B. (n.d.). Real-Time Rendering of Water in Computer Graphics. Seminar (Mit Bachelorarbeit) WS, 4h, 
+     186(162). Retrieved from \\ 
+     https://pdfs.semanticscholar.org/a101/3c7818efdd421775dc6e754ae6eb429641f2.pdf
+
+Reeves, W. T. (1983). Particle systems---a technique for modeling a class of fuzzy 
+     objects. \textit{Proceedings of the 10th Annual Conference on Computer Graphics and 
+     Interactive Techniques - SIGGRAPH 83}, 17(3), 359–375. doi: 10.1145/800059.801167
+
+Xu, X., \& Zou, K. (2012). Simulation of Realistic Water on 3D Game Scene. 
+     \textit{Procedia Engineering}, 29, 1819–1823. doi: 10.1016/j.proeng.2012.01.219
+
+\end{description}
+\newpage
+
+
+\noindent{\Large\bf Objectives:}
+
+{\hfill{\bf Full UserID: pt2pham}\hfill{\bf Student ID: 20610310}\hfill}
+
+\begin{enumerate}
+     \item[\_\_\_ 1:]  Implement a skybox that positions itself around the camera and moves with it.
+
+     \item[\_\_\_ 2:]  Create a model of a shark that will be used as the main enemy in the game.
+
+     \item[\_\_\_ 3:]  Texture Mapping
+
+     \item[\_\_\_ 4:]  Bump Mapping
+
+     \item[\_\_\_ 5:]  Particle System
+
+     \item[\_\_\_ 6:]  3D Collision Detection
+
+     \item[\_\_\_ 7:]  Animate the shark swimming underneath water.
+
+     \item[\_\_\_ 8:]  Implement the reflection of light on top of the water.
+
+     \item[\_\_\_ 9:]  Implement refraction of light for underwater objects.
+
+     \item[\_\_\_ 10:]  Final Modelled Scene of the Game
+\end{enumerate}
+\end{document}

@@ -9,6 +9,8 @@
 #include <list>
 #include <string>
 #include <iostream>
+#include "Ray.hpp"
+#include "Hit.hpp"
 
 enum class NodeType {
 	SceneNode,
@@ -40,7 +42,9 @@ public:
     void scale(const glm::vec3& amount);
     void translate(const glm::vec3& amount);
 
-
+    virtual Hit intersect(const Ray & ray);
+    // virtual Hit intersect(const Ray & ray, std::list<glm::mat4> transforms);
+    
 	friend std::ostream & operator << (std::ostream & os, const SceneNode & node);
 
     // Transformations

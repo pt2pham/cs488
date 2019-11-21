@@ -1,0 +1,28 @@
+PWD c:/Users/phong/Documents/School/UW UNDERGRAD/Fourth Year/4A/cs488/proposal
+INPUT c:/texlive/2019/texmf.cnf
+INPUT c:/texlive/2019/texmf-dist/web2c/texmf.cnf
+INPUT c:/texlive/2019/texmf-var/web2c/pdftex/pdflatex.fmt
+INPUT c:/Users/phong/Documents/School/UW UNDERGRAD/Fourth Year/4A/cs488/proposal/proposal.tex
+OUTPUT c:/Users/phong/Documents/School/UW UNDERGRAD/Fourth Year/4A/cs488/proposal/proposal.log
+INPUT c:/texlive/2019/texmf-dist/tex/latex/base/article.cls
+INPUT c:/texlive/2019/texmf-dist/tex/latex/base/article.cls
+INPUT c:/texlive/2019/texmf-dist/tex/latex/base/size10.clo
+INPUT c:/texlive/2019/texmf-dist/tex/latex/base/size10.clo
+INPUT c:/texlive/2019/texmf-dist/tex/latex/preprint/fullpage.sty
+INPUT c:/texlive/2019/texmf-dist/tex/latex/preprint/fullpage.sty
+INPUT c:/Users/phong/Documents/School/UW UNDERGRAD/Fourth Year/4A/cs488/proposal/proposal.aux
+INPUT c:/Users/phong/Documents/School/UW UNDERGRAD/Fourth Year/4A/cs488/proposal/proposal.aux
+OUTPUT c:/Users/phong/Documents/School/UW UNDERGRAD/Fourth Year/4A/cs488/proposal/proposal.aux
+INPUT c:/texlive/2019/texmf-dist/fonts/map/fontname/texfonts.map
+INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
+OUTPUT c:/Users/phong/Documents/School/UW UNDERGRAD/Fourth Year/4A/cs488/proposal/proposal.pdf
+INPUT c:/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map
+INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
+INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
+INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/cm/cmti10.tfm
+INPUT c:/Users/phong/Documents/School/UW UNDERGRAD/Fourth Year/4A/cs488/proposal/proposal.aux
+INPUT c:/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
+INPUT c:/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
+INPUT c:/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
+INPUT c:/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb
+INPUT c:/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb

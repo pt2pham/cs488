@@ -25,3 +25,15 @@ void A4_Render(
 		const glm::vec3 & ambient,
 		const std::list<Light *> & lights
 );
+
+glm::vec3 drawBackground(double y, const double height);
+
+glm::vec3 evaluateLighting(
+	const glm::vec3 & ambient,
+	const std::list<Light *> & lights, 
+	SceneNode * node,
+	Hit & hit, 
+	const Ray & ray
+);
+
+Hit closestObjectFromRay(SceneNode * root, const Ray & ray);

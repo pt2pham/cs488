@@ -1,6 +1,7 @@
 // Fall 2019
 
 #include "GeometryNode.hpp"
+#include "Debug.hpp"
 
 //---------------------------------------------------------------------------------------
 GeometryNode::GeometryNode(
@@ -26,4 +27,24 @@ void GeometryNode::setMaterial( Material *mat )
 	//     crash the program.
 
 	m_material = mat;
+}
+
+// Invert transformations before calculating intersection
+Hit GeometryNode::intersect(const Ray & ray) {
+	Ray invRay = Ray::rayCopy(invtrans * ray.origin, invtrans * ray.direction);
+	Hit h = m_primitive->intersect(invRay);
+
+	// Traverse children
+	for (auto child : children) {
+		Hit hit = child->intersect(invRay);
+		if (hit.hit && (!h.hit || hit.t < h.t))
+			h = hit;
+	}
+
+	if (h.hit) {
+		h.normal = glm::transpose(invtrans) * h.normal;
+		h.mat = (PhongMaterial *) m_material;
+	}
+
+	return h;
 }

@@ -273,8 +273,7 @@ void A1::dig() {
 void A1::appLogic()
 {
 	// Place per frame, application logic here ...
-	if ((clock() - last_release_time) / (double) CLOCKS_PER_SEC <= 1.5 
-		&& (clock() - last_release_time) / (double) CLOCKS_PER_SEC >= 0) {
+	if ((clock() - last_release_time) / (double) CLOCKS_PER_SEC <= 1.5) {
 		model_rotation += last_rotation_dir * 0.01f;
 		last_rotation_dir *= 0.97;
 	}

@@ -113,6 +113,21 @@ int SceneNode::totalSceneNodes() const {
 	return nodeInstanceCount;
 }
 
+Hit SceneNode::intersect(const Ray & ray) {
+	Ray invRay = Ray::rayCopy(invtrans * ray.origin, invtrans * ray.direction);
+
+	double t = INFINITY;
+	Hit closest_hit;
+	for (auto child : children) {
+		Hit hit = child->intersect(invRay);
+		if (hit.hit && hit.t < t) {
+			closest_hit = hit;
+			closest_hit.normal = glm::transpose(invtrans) * closest_hit.normal;
+		}
+	}
+
+	return closest_hit;
+}
 //---------------------------------------------------------------------------------------
 std::ostream & operator << (std::ostream & os, const SceneNode & node) {
 

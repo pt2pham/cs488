@@ -112,9 +112,14 @@ protected:
 	float viewportWidth;
 	float viewport_x_vl; // X-coord of the viewport window (bottom left)
 	float viewport_y_vb; // Y-coord of the viewport window (bottom left)
+	float viewport_x_topright; // Y-coord of the viewport window (top right)
+	float viewport_y_topright; // Y-coord of the viewport window (top right)
 	float selected_viewport_x;
 	float selected_viewport_y;
+	float changing_viewport_x;
+	float changing_viewport_y;
 	bool storeViewportCorner = false;
+	bool calcViewportSize = false;
 
 	glm::vec3 m_currentLineColour;
 

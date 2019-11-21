@@ -83,6 +83,8 @@ void A2::init()
 	viewportHeight = 0.9 * m_framebufferHeight;
 	viewport_x_vl = -0.9f;
 	viewport_y_vb = -0.9f;
+	viewport_x_topright = 0.9f;
+	viewport_y_topright = 0.9f;
 
 	// Set the background colour.
 	glClearColor(0.3, 0.5, 0.7, 1.0);
@@ -291,8 +293,8 @@ void A2::drawViewport() {
 		viewport_y_vb + 2 * float(viewportHeight / m_framebufferHeight)
 	);
 	vec2 top_right = vec2(
-		viewport_x_vl + 2 * float(viewportWidth / m_framebufferWidth), 
-		viewport_y_vb + 2 * float(viewportHeight / m_framebufferHeight)
+		viewport_x_topright, 
+		viewport_y_topright
 	);
 
 	drawLine(bot_left, bot_right);
@@ -758,7 +760,7 @@ void A2::scaleModel(double xDifference) {
 void A2::rotateView(double xDifference) {
 	// rotateModel but inverse matrices
 	double theta = glm::radians(xDifference);
-	if (ImGui::IsMouseDown(1)) { 
+	if (ImGui::IsMouseDown(0)) { 
 		const mat4 rotation_X(
 			1, 0, 0, 0,
 			0, std::cos(theta), std::sin(theta), 0,
@@ -860,22 +862,30 @@ void A2::resizeViewport(double xPos, double yPos) {
 	if (storeViewportCorner) {
 		selected_viewport_x = xPos;
 		selected_viewport_y = yPos;
-		viewport_x_vl = xPos;
-		viewport_y_vb = yPos;
 		storeViewportCorner = false;
 	}
 	if (ImGui::IsMouseDown(0)) {
 		// Save xPos and yPos on click 
 		// Constantly track xPos and yPos while holding 
 		// Update viewport according to the xPos and yPos supplied while mouse is held down
-		viewport_x_vl = std::min(xPos, double(viewport_x_vl));
-		viewport_y_vb = std::min(yPos, double(viewport_y_vb));
-		cout << viewport_x_vl << endl;
-		cout << viewport_y_vb << endl;
+		changing_viewport_x = xPos;
+		changing_viewport_y = yPos;
+
+		cout << changing_viewport_x << endl;
+		cout << changing_viewport_y << endl;
+
 		viewportWidth = abs(selected_viewport_x - xPos) * m_framebufferWidth/ 2;
 		viewportHeight = abs(selected_viewport_y - yPos) * m_framebufferHeight / 2;
 		// calculate each corner and find the one with lowest x and y, thats the viewport_x_vl etc?
+		calcViewportSize = true;
+	} else if (calcViewportSize) {
+		if (changing_viewport_x < selected_viewport_x) {
+			
+		}
+		if (changing_viewport_y < selected_viewport_y) {
 
+		}
+		calcViewportSize = false;
 	}
 }
 

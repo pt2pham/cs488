@@ -21,13 +21,13 @@ footDim = {0.1, 0.1, 0.35}
 
 -- Create the top level root node named 'root'.
 rootNode = gr.node('root')
+rootNode:rotate('y', 180)
 
 -- 
 torso = gr.mesh('sphere', 'torso')
 rootNode:add_child(torso)
 torso:scale(torsoDim[1], torsoDim[2], torsoDim[3])
 torso:translate(0, 0.5, 0)
-torso:rotate('y', -90)
 torso:set_material(beige)
 
 -- LEVEL 1

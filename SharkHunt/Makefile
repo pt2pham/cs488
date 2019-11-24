@@ -6,14 +6,14 @@ ifndef config
 endif
 export config
 
-PROJECTS := A3
+PROJECTS := SharkHunt
 
 .PHONY: all clean help $(PROJECTS)
 
 all: $(PROJECTS)
 
-A3: 
-	@echo "==== Building A3 ($(config)) ===="
+SharkHunt: 
+	@echo "==== Building SharkHunt ($(config)) ===="
 	@${MAKE} --no-print-directory -C build -f Makefile
 
 clean:
@@ -29,6 +29,6 @@ help:
 	@echo "TARGETS:"
 	@echo "   all (default)"
 	@echo "   clean"
-	@echo "   A3"
+	@echo "   SharkHunt"
 	@echo ""
 	@echo "For more information, see http://industriousone.com/premake/quick-start"

@@ -1,6 +1,8 @@
 #version 330
 
 uniform bool picking;
+// uniform GLuint texCoordID;
+// uniform GLuint texID;
 
 struct LightSource {
     vec3 position;

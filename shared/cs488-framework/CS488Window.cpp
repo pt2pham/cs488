@@ -373,7 +373,7 @@ void CS488Window::run (
     printGLInfo();
 #endif
 
-    glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     registerGlfwCallBacks();
 

@@ -1,6 +1,6 @@
 // Fall 2019
 
-#include "A3.hpp"
+#include "SharkHunt.hpp"
 
 #include <iostream>
 using namespace std;
@@ -9,11 +9,11 @@ int main( int argc, char **argv )
 {
 	if (argc > 1) {
 		std::string luaSceneFile(argv[1]);
-		std::string title("F19 Assignment 3 - [");
+		std::string title("F19 Final Project - [");
 		title += luaSceneFile;
 		title += "]";
 
-		CS488Window::launch(argc, argv, new A3(luaSceneFile), 1024, 768, title);
+		CS488Window::launch(argc, argv, new SharkHunt(luaSceneFile), 1024, 768, title);
 
 	} else {
 		cout << "Must supply Lua file as First argument to program.\n";

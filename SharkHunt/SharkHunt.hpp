@@ -50,6 +50,7 @@ protected:
 	void initViewMatrix();
 	void initLightSources();
 	void initCamera();
+	void loadTexture();
 
 	void initPerspectiveMatrix();
 	void uploadCommonSceneUniforms();
@@ -89,15 +90,10 @@ protected:
 	GLuint m_vao_meshData;
 	GLuint m_vbo_vertexPositions;
 	GLuint m_vbo_vertexNormals;
+	GLuint m_vbo_uvCoords;
 	GLint m_positionAttribLocation;
 	GLint m_normalAttribLocation;
 	ShaderProgram m_shader;
-
-	//-- GL resources for trackball circle geometry:
-	GLuint m_vbo_arcCircle;
-	GLuint m_vao_arcCircle;
-	GLint m_arc_positionAttribLocation;
-	ShaderProgram m_shader_arcCircle;
 
 	// BatchInfoMap is an associative container that maps a unique MeshId to a BatchInfo
 	// object. Each BatchInfo object contains an index offset and the number of indices

@@ -28,9 +28,7 @@ SharkHunt::SharkHunt(const std::string & luaSceneFile)
 	  m_normalAttribLocation(0),
 	  m_vao_meshData(0),
 	  m_vbo_vertexPositions(0),
-	  m_vbo_vertexNormals(0),
-	  m_vao_arcCircle(0),
-	  m_vbo_arcCircle(0)
+	  m_vbo_vertexNormals(0)
 {
 
 }
@@ -53,7 +51,6 @@ void SharkHunt::init()
 
 	createShaderProgram();
 
-	glGenVertexArrays(1, &m_vao_arcCircle);
 	glGenVertexArrays(1, &m_vao_meshData);
 	enableVertexShaderInputSlots();
 
@@ -67,8 +64,7 @@ void SharkHunt::init()
 			getAssetFilePath("cube.obj"),
 			getAssetFilePath("sphere.obj"),
 			getAssetFilePath("suzanne.obj"),
-			getAssetFilePath("Models/boat.obj"),
-			// getAssetFilePath("Models/16447_1940sRowBoat_.obj")
+			getAssetFilePath("Models/Weapon_PortableCannon.obj")
 	});
 
 
@@ -158,6 +154,24 @@ void SharkHunt::renderSkybox() {
 
 }
 
+void SharkHunt::loadTexture() {
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	// Black/white checkerboard
+	float pixels[] = {
+		0.0f, 0.0f, 0.0f,   1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,   0.0f, 0.0f, 0.0f
+	};
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_FLOAT, pixels);
+
+
+}
+
 //----------------------------------------------------------------------------------------
 void SharkHunt::processLuaSceneFile(const std::string & filename) {
 	// This version of the code treats the Lua file as an Asset,
@@ -182,10 +196,10 @@ void SharkHunt::createShaderProgram()
 	m_shader.attachFragmentShader( getAssetFilePath("FragmentShader.fs").c_str() );
 	m_shader.link();
 
-	m_shader_arcCircle.generateProgramObject();
-	m_shader_arcCircle.attachVertexShader( getAssetFilePath("arc_VertexShader.vs").c_str() );
-	m_shader_arcCircle.attachFragmentShader( getAssetFilePath("arc_FragmentShader.fs").c_str() );
-	m_shader_arcCircle.link();
+	// m_shader_cannon.generateProgramObject();
+	// m_shader_cannon.attachVertexShader();
+	// m_shader_cannon.attachFragmentShader();
+	// m_shader_cannon.link();
 }
 
 //----------------------------------------------------------------------------------------
@@ -202,18 +216,6 @@ void SharkHunt::enableVertexShaderInputSlots()
 		// Enable the vertex shader attribute location for "normal" when rendering.
 		m_normalAttribLocation = m_shader.getAttribLocation("normal");
 		glEnableVertexAttribArray(m_normalAttribLocation);
-
-		CHECK_GL_ERRORS;
-	}
-
-
-	//-- Enable input slots for m_vao_arcCircle:
-	{
-		glBindVertexArray(m_vao_arcCircle);
-
-		// Enable the vertex shader attribute location for "position" when rendering.
-		m_arc_positionAttribLocation = m_shader_arcCircle.getAttribLocation("position");
-		glEnableVertexAttribArray(m_arc_positionAttribLocation);
 
 		CHECK_GL_ERRORS;
 	}
@@ -251,24 +253,6 @@ void SharkHunt::uploadVertexDataToVbos (
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		CHECK_GL_ERRORS;
 	}
-
-	// Generate VBO to store the trackball circle.
-	{
-		glGenBuffers( 1, &m_vbo_arcCircle );
-		glBindBuffer( GL_ARRAY_BUFFER, m_vbo_arcCircle );
-
-		float *pts = new float[ 2 * CIRCLE_PTS ];
-		for( size_t idx = 0; idx < CIRCLE_PTS; ++idx ) {
-			float ang = 2.0 * M_PI * float(idx) / CIRCLE_PTS;
-			pts[2*idx] = cos( ang );
-			pts[2*idx+1] = sin( ang );
-		}
-
-		glBufferData(GL_ARRAY_BUFFER, 2*CIRCLE_PTS*sizeof(float), pts, GL_STATIC_DRAW);
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		CHECK_GL_ERRORS;
-	}
 }
 
 //----------------------------------------------------------------------------------------
@@ -286,20 +270,6 @@ void SharkHunt::mapVboDataToVertexShaderInputLocations()
 	// "normal" vertex attribute location for any bound vertex shader program.
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo_vertexNormals);
 	glVertexAttribPointer(m_normalAttribLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-	//-- Unbind target, and restore default values:
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	CHECK_GL_ERRORS;
-
-	// Bind VAO in order to record the data mapping.
-	glBindVertexArray(m_vao_arcCircle);
-
-	// Tell GL how to map data from the vertex buffer "m_vbo_arcCircle" into the
-	// "position" vertex attribute location for any bound vertex shader program.
-	glBindBuffer(GL_ARRAY_BUFFER, m_vbo_arcCircle);
-	glVertexAttribPointer(m_arc_positionAttribLocation, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
 	//-- Unbind target, and restore default values:
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -545,28 +515,6 @@ void SharkHunt::renderSceneGraph() {
 	deque<glm::mat4> stack;
 	
 	m_rootNode->render(m_shader, m_view, m_batchInfoMap, stack);
-
-	glBindVertexArray(0);
-	CHECK_GL_ERRORS;
-}
-
-//----------------------------------------------------------------------------------------
-// Draw the trackball circle.
-void SharkHunt::renderArcCircle() {
-	glBindVertexArray(m_vao_arcCircle);
-
-	m_shader_arcCircle.enable();
-		GLint m_location = m_shader_arcCircle.getUniformLocation( "M" );
-		float aspect = float(m_framebufferWidth)/float(m_framebufferHeight);
-		glm::mat4 M;
-		if( aspect > 1.0 ) {
-			M = glm::scale( glm::mat4(), glm::vec3( 0.5/aspect, 0.5, 1.0 ) );
-		} else {
-			M = glm::scale( glm::mat4(), glm::vec3( 0.5, 0.5*aspect, 1.0 ) );
-		}
-		glUniformMatrix4fv( m_location, 1, GL_FALSE, value_ptr( M ) );
-		glDrawArrays( GL_LINE_LOOP, 0, CIRCLE_PTS );
-	m_shader_arcCircle.disable();
 
 	glBindVertexArray(0);
 	CHECK_GL_ERRORS;

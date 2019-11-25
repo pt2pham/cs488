@@ -1,0 +1,40 @@
+# Blender MTL File: 'Weapon_PortableCannon.blend'
+# Material Count: 4
+
+newmtl None
+Ns 500
+Ka 0.8 0.8 0.8
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+
+newmtl Weapon_PC_Metal
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.201900 0.201900 0.201900
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Weapon_PC_Metal_2
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.698192 0.698192 0.698192
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Weapon_PC_Wood
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.201900 0.053905 0.019633
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 2

@@ -29,6 +29,7 @@ if os.get() == "linux" then
         "cs488-framework",
         "imgui",
         "glfw3",
+        "lodepng",
         "lua",
         "GL",
         "Xinerama",

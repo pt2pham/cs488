@@ -35,7 +35,16 @@ public:
     * just in case - although the command is never passed from main, it doesn't hurt?
     */
     void move(const glm::vec3 & amount);
+
+    /*
+    * States that the player is firing a cannonball
+    */
+    bool shoot();
+
+    void setAmmo(GLuint ammo);
     friend std::ostream & operator << (std::ostream & os, const Player & node);
+
+    bool isShooting;
 
 private:
     /*

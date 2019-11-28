@@ -13,8 +13,21 @@ scene = gr.node('root')
 cannon = gr.mesh('Proto_PortableCannon', 'Weapon_PortableCannon.obj')
 scene:add_child(cannon)
 cannon:set_material(dark_grey)
+cannon:rotate('y', 180)
+cannon:translate(0, 0, -7)
+
+cannon1 = gr.mesh('Proto_PortableCannon', 'Weapon_PortableCannon.obj')
+scene:add_child(cannon1)
+cannon1:set_material(dark_grey)
+cannon1:rotate('y', 180)
+cannon1:translate(2, 0, -7)
+
+cannon2 = gr.mesh('Proto_PortableCannon', 'Weapon_PortableCannon.obj')
+scene:add_child(cannon2)
+cannon2:set_material(dark_grey)
+cannon2:rotate('y', 180)
+cannon2:translate(-2, 0, -7)
 --
 -- Return the root with all of it's childern.
-
-scene:translate(0, 0, -7)
+scene:scale(0.5, 0.5, 0.5)
 return scene

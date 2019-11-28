@@ -1,6 +1,5 @@
 #version 330
 
-uniform bool picking;
 // uniform GLuint texCoordID;
 // uniform GLuint texID;
 
@@ -12,6 +11,7 @@ struct LightSource {
 in VsOutFsIn {
 	vec3 position_ES; // Eye-space position
 	vec3 normal_ES;   // Eye-space normal
+    vec2 uv_ES;       // Eye-space uv
 	LightSource light;
 } fs_in;
 
@@ -27,6 +27,7 @@ uniform Material material;
 // Ambient light intensity for each RGB component.
 uniform vec3 ambientIntensity;
 
+uniform sampler2D sampler;
 
 vec3 phongModel(vec3 fragPosition, vec3 fragNormal) {
 	LightSource light = fs_in.light;
@@ -56,9 +57,12 @@ vec3 phongModel(vec3 fragPosition, vec3 fragNormal) {
 }
 
 void main() {
-	if( picking ) {
-		fragColour = vec4(material.kd, 1.0);
-	} else {
-		fragColour = vec4(phongModel(fs_in.position_ES, fs_in.normal_ES), 1.0);
-	}
+    vec3 lighting = phongModel(fs_in.position_ES, fs_in.normal_ES);
+    // Only include texture coords if the model uses uv coords
+    // if (fs_in.uv_ES) {
+        vec3 texCoord = texture(sampler, fs_in.uv_ES).rgb;
+        fragColour = vec4(lighting * texCoord, 1.0);
+    // } else {
+    //     fragColour = vec4(lighting, 1.0);
+    // }
 }

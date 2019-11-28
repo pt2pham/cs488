@@ -21,55 +21,41 @@
 #include <stack>
 #include <queue>
 
-
 class Weapon {
 public:
-    Weapon(const std::string & name);
+    Weapon(SceneNode * node);
+    ~Weapon();
 
-	Weapon(const Weapon & other);
+    /*
+    * Move the thing
+    */
+    void animate();
 
-    virtual ~Weapon();
-    
-    const glm::mat4& get_transform() const;
-    const glm::mat4& get_inverse() const;
+    /*
+    * Check if the lifetime of the cannon should be over
+    */
+    bool isExpired();
 
-    // TODO: Will probably load init Weapon with some lua script that 
-    SceneNode * Weapon_model; 
+    /*
+    * Set translation back to (0,0,0)
+    */
+    void reset();
 
-    void set_transform(const glm::mat4& m);
+    void setTrajectory(glm::vec3 pos, glm::vec3 direction);
 
-    void picking_on();
-    void picking_off();
+    friend std::ostream & operator << (std::ostream & os, const Weapon & node);
 
-    virtual void render(
-        const ShaderProgram & m_shader,
-        const glm::mat4 & m_view,
-        BatchInfoMap & m_batchInfoMap, 
-        std::deque<glm::mat4> & stack
-    );
-
-	//-- Transformations:
-    virtual void rotate(char axis, float angle);
-    void scale(const glm::vec3& amount);
-    void translate(const glm::vec3& amount);
-
-
-	friend std::ostream & operator << (std::ostream & os, const Weapon & node);
-
-	bool isSelected;
-    static bool do_picking;
-    Weapon * parent;
-    
-    // Transformations
-    glm::mat4 trans;
-    glm::mat4 invtrans;
-    
-    std::list<Weapon*> children;
-
-	NodeType m_nodeType;
-	std::string m_name;
-	unsigned int m_nodeId;
+    SceneNode * model; 
 private:
-	// The number of Weapon instances.
-	static unsigned int nodeInstanceCount;
+    /*
+    * How much the cannon should be translated compared to its origin
+    */
+    glm::vec3 translation;
+
+    /*
+    * Duration that the cannonball lasts
+    */
+    float lifetime;
+    glm::vec3 start_pos;
+    glm::vec3 direction;
 };

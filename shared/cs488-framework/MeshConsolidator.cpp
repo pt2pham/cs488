@@ -55,11 +55,6 @@ MeshConsolidator::MeshConsolidator(
 					"positions.size() != normals.size()\n");
 	    }
 
-	    if (numIndices != uvCoords.size()) {
-		    throw Exception("Error within MeshConsolidator: "
-					"positions.size() != uvCoords.size()\n");
-	    }
-
 	    batchInfo.startIndex = indexOffset;
 	    batchInfo.numIndices = numIndices;
 

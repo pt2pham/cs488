@@ -9,6 +9,7 @@
 
 #include "SceneNode.hpp"
 #include "Player.hpp"
+#include "Weapon.hpp"
 
 #include <glm/glm.hpp>
 #include <memory>
@@ -50,18 +51,14 @@ protected:
 	void initViewMatrix();
 	void initLightSources();
 	void initCamera();
+	void initCannonball();
 	void loadTexture();
+	void loadSkybox();
 
 	void initPerspectiveMatrix();
 	void uploadCommonSceneUniforms();
 	void renderSceneGraph();
-	void renderArcCircle();
-
-	void resetPosition();
-	void resetOrientation();
-	void resetJoints();
-	void undo();
-	void redo();
+	void renderCannonball();
 	void renderSkybox();
 
 	void updatePosition(double diff);
@@ -72,28 +69,29 @@ protected:
 
 	glm::mat4 m_perpsective;
 	glm::mat4 m_view;
-	bool do_picking;
 	LightSource m_light;
 	std::unordered_set<SceneNode *> selectedJointNodes;
 	bool backface_culling;
 	bool frontface_culling;
 	bool zbuffer;
-	bool circle;
-	int transformation_mode;
 	double old_x_pos;
 	double old_y_pos;
-	glm::mat4 init_root_trans;
 
 	Player * player;
+	Weapon * cannonball;
 
 	//-- GL resources for mesh geometry data:
 	GLuint m_vao_meshData;
 	GLuint m_vbo_vertexPositions;
 	GLuint m_vbo_vertexNormals;
 	GLuint m_vbo_uvCoords;
+	GLuint m_vao_skybox;
+	GLuint m_vbo_skybox;
 	GLint m_positionAttribLocation;
 	GLint m_normalAttribLocation;
+	GLint m_uvAttribLocation;
 	ShaderProgram m_shader;
+	ShaderProgram m_skybox_shader;
 
 	// BatchInfoMap is an associative container that maps a unique MeshId to a BatchInfo
 	// object. Each BatchInfo object contains an index offset and the number of indices
@@ -103,6 +101,7 @@ protected:
 	std::string m_luaSceneFile;
 
 	SceneNode * m_rootNode;
+	SceneNode * cannonballSceneNode;
 
 	// Camera variables
 	glm::vec3 cameraPos;
@@ -116,4 +115,8 @@ protected:
 	float yaw;
 	float pitch;
 	float sensitivity;
+
+	GLuint tntTexture;
+	GLuint skyboxTexture;
+
 };
